@@ -11,12 +11,11 @@ class UpdateMoviesTable extends Migration
      *
      * @return void
      */
-     // creo questa migrations per aggiornare la tabella movie inserendo una nuova tabella
     public function up()
     {
-      Schema::create('movies', function (Blueprint $table) {
-        $table->unsignedBigInteger('genre_id');
-        $table->foreign('genre_id')->references('id')->('genres');
+      Schema::table('movies', function (Blueprint $table) {
+        $table->unsignedBigInteger('genre_id')->nullable()->after('id');
+        $table->foreign('genre_id')->references('id')->on('genres');
       });
     }
 
@@ -27,7 +26,9 @@ class UpdateMoviesTable extends Migration
      */
     public function down()
     {
-      $table->dropForeign('movies_genre_id_foreign');
-      $table->dropColumn('genre_id');
+        Schema::create('movies', function (Blueprint $table) {
+          $table->dropForeign('movies_genre_id_foreign');
+          $table->dropColumn('genre_id');
+      });
     }
 }
